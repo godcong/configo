@@ -22,3 +22,9 @@ _testmain.go
 *.exe
 *.test
 *.prof
+.idea/configo.iml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/libraries/Go_SDK.xml
+.idea/libraries/GOPATH__configo_.xml
