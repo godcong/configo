@@ -34,6 +34,9 @@ const CONFIG_FILE = "config.env"
 
 func init() {
 	config = NewDefaultConfig()
+	if e := config.Load(); e != nil {
+		panic(e)
+	}
 }
 
 func GetSystemSeparator() string {
