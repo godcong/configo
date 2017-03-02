@@ -1,13 +1,8 @@
 package main
 
-import (
-	"fmt"
-
-	"github.com/godcong/configo/config"
-)
+import "fmt"
 
 func main() {
-	config.Load()
 	p := config.Get(`default`).Get("path")
 	fmt.Println(p)
 
