@@ -1,9 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/godcong/configo"
+)
 
 func main() {
-	p := config.Get(`default`).Get("path")
+	p := configo.Get(`default`).Get("path")
 	fmt.Println(p)
 
 }
