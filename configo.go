@@ -72,8 +72,8 @@ func (c *Config) Load() error {
 	}
 	defer file.Close()
 
-	if loadErr := envLoad(c, file); loadErr != nil {
-		return loadErr
+	if e := envLoad(c, file); e != nil {
+		return e
 	}
 	return nil
 }
@@ -97,9 +97,25 @@ func (c *Config) Get(s string) *Property {
 	return nil
 }
 
-func (p *Property) Get(s string) string {
+func (p *Property) Get(s ...string) string {
+	if len(s) > 1 {
+		return p.GetOneD(s[0], s[1])
+	} else {
+		return p.GetOne(s[0])
+	}
+}
+
+func (p *Property) GetOne(s string) string {
 	if v, ok := (*p)[s]; ok {
 		return v
 	}
+
 	return ""
+}
+
+func (p *Property) GetOneD(s, d string) string {
+	if v, ok := (*p)[s]; ok {
+		return v
+	}
+	return d
 }
