@@ -9,6 +9,6 @@ version = 1.44
 [test]
 num =	666
 something  = wrong  #注释1
-#fdfdfd = fdfdfd    注释整行
+\#fdfdfd = fdfdfd    注释整行
 refer= refer       //注释3
 
