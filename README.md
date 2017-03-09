@@ -1,7 +1,7 @@
 # configo
 an go config load project
 
-an env example:
+an env example: <br/>
 [default] <br/>
 path= c:/go <br/>
 version = 1.44 <br/>
