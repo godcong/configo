@@ -1,6 +1,7 @@
 package configo
 
 import (
+	"errors"
 	"os"
 	"runtime"
 	"strings"
@@ -86,34 +87,28 @@ func envLoad(c *Config, f *os.File) error {
 	return nil
 }
 
-func Get(s string) *Property {
+func Get(s string) (*Property, error) {
 	return config.Get(s)
 }
 
-func (c *Config) Get(s string) *Property {
+func (c *Config) Get(s string) (*Property, error) {
 	if config.configType == TYPE_DEFAULT {
-		return envDefaultGet(s)
+		return envDefaultGet(s), nil
 	}
-	return nil
+	return nil, errors.New("property type not found")
 }
 
-func (p *Property) Get(s ...string) string {
-	if len(s) > 1 {
-		return p.GetOneD(s[0], s[1])
-	} else {
-		return p.GetOne(s[0])
-	}
-}
+func (p *Property) Get(s string) (string, error) {
 
-func (p *Property) GetOne(s string) string {
 	if v, ok := (*p)[s]; ok {
-		return v
+		return v, nil
 	}
 
-	return ""
+	return "", errors.New("property value not found")
+
 }
 
-func (p *Property) GetOneD(s, d string) string {
+func (p *Property) MustGet(s, d string) string {
 	if v, ok := (*p)[s]; ok {
 		return v
 	}
