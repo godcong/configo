@@ -25,9 +25,9 @@ type (
 )
 
 type Config struct {
-	configType CONFIG_TYPE
-	configPath string
-	configure  Common
+	Type      CONFIG_TYPE
+	Path      string
+	Configure Common
 }
 
 var config *Config
@@ -37,7 +37,7 @@ const DEFAULT_CONFIG_FILE = "config.env"
 func init() {
 	config = NewDefaultConfig()
 	if e := config.Load(); e != nil {
-		config.configure = make(Default)
+		config.Configure = make(Default)
 	}
 }
 
@@ -67,9 +67,9 @@ func NewConfig(path string, args ...CONFIG_TYPE) *Config {
 	}
 
 	conf := &Config{
-		configType: configType,
-		configPath: path,
-		configure:  (Common)(defaultConfig),
+		Type:      configType,
+		Path:      path,
+		Configure: (Common)(defaultConfig),
 	}
 	return conf
 }
@@ -79,7 +79,7 @@ func Load() error {
 }
 
 func (c *Config) Load() error {
-	file, openErr := os.Open(c.configPath)
+	file, openErr := os.Open(c.Path)
 	if openErr != nil {
 		return ERROR_CONFIG_CANNOT_OPEN
 	}
@@ -92,7 +92,7 @@ func (c *Config) Load() error {
 }
 
 func envLoad(c *Config, f *os.File) error {
-	if c.configType == TYPE_DEFAULT {
+	if c.Type == TYPE_DEFAULT {
 		return envDefault(c, f)
 	}
 
@@ -104,7 +104,7 @@ func Get(s string) (*Property, error) {
 }
 
 func (c *Config) Get(s string) (*Property, error) {
-	if config.configType == TYPE_DEFAULT {
+	if config.Type == TYPE_DEFAULT {
 		p := envDefaultGet(s)
 		if p != nil {
 			return p, nil
