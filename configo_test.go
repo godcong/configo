@@ -3,7 +3,8 @@ package configo
 import "testing"
 
 func TestNewConfig(t *testing.T) {
-	t.Log("ok")
+	t.Log(NewConfig("/", TYPE_DEFAULT) != nil)
+	t.Log(NewConfig("/") != nil)
 }
 
 func TestNewDefaultConfig(t *testing.T) {
@@ -11,4 +12,8 @@ func TestNewDefaultConfig(t *testing.T) {
 		t.Log("load error", err)
 	}
 
+}
+
+func TestConfig_Get(t *testing.T) {
+	t.Log(Get("some"))
 }

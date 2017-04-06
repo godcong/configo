@@ -1,14 +1,15 @@
 package configo
 
 import (
-	"errors"
 	"os"
 	"runtime"
 	"strings"
 )
 
+type CONFIG_TYPE int
+
 const (
-	TYPE_DEFAULT = iota
+	TYPE_DEFAULT CONFIG_TYPE = iota
 )
 
 const (
@@ -24,19 +25,19 @@ type (
 )
 
 type Config struct {
-	configType int
+	configType CONFIG_TYPE
 	configPath string
 	configure  Common
 }
 
 var config *Config
 
-const CONFIG_FILE = "config.env"
+const DEFAULT_CONFIG_FILE = "config.env"
 
 func init() {
 	config = NewDefaultConfig()
 	if e := config.Load(); e != nil {
-		panic(e)
+		config.configure = make(Default)
 	}
 }
 
@@ -48,15 +49,26 @@ func GetSystemSeparator() string {
 }
 
 func NewDefaultConfig() *Config {
-	defaultConfig := make(Default)
 	wd, err := os.Getwd()
-	if err != nil {
-		panic(err)
+	fp := ""
+	if err == nil {
+		fp = strings.Join([]string{wd, DEFAULT_CONFIG_FILE}, GetSystemSeparator())
 	}
-	fp := strings.Join([]string{wd, CONFIG_FILE}, GetSystemSeparator())
+
+	return NewConfig(fp)
+}
+
+func NewConfig(path string, args ...CONFIG_TYPE) *Config {
+	defaultConfig := make(Default)
+
+	configType := TYPE_DEFAULT
+	if args != nil {
+		configType = args[0]
+	}
+
 	conf := &Config{
-		configType: TYPE_DEFAULT,
-		configPath: fp,
+		configType: configType,
+		configPath: path,
 		configure:  (Common)(defaultConfig),
 	}
 	return conf
@@ -93,9 +105,13 @@ func Get(s string) (*Property, error) {
 
 func (c *Config) Get(s string) (*Property, error) {
 	if config.configType == TYPE_DEFAULT {
-		return envDefaultGet(s), nil
+		p := envDefaultGet(s)
+		if p != nil {
+			return p, nil
+		}
+		return nil, ERROR_CONFIG_GET_PROPERTY
 	}
-	return nil, errors.New("property type not found")
+	return nil, ERROR_CONFIG_GET_PROPERTY_TYPE
 }
 
 func (p *Property) Get(s string) (string, error) {
@@ -104,7 +120,7 @@ func (p *Property) Get(s string) (string, error) {
 		return v, nil
 	}
 
-	return "", errors.New("property value not found")
+	return "", ERROR_CONFIG_GET_PROPERTY_VALUE
 
 }
 
