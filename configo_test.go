@@ -14,10 +14,6 @@ func TestSome(t *testing.T) {
 	p := make(Property, 10)
 	p["hhh"] = "hahaha"
 	fmt.Println(p)
-
-	p1 := new(Property)
-	(*p1)["p1p1p1"] = "papapa"
-	fmt.Println()
 }
 
 func TestConfig_Get(t *testing.T) {
