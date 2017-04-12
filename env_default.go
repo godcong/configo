@@ -26,7 +26,7 @@ func envDefault(c *Config, f *os.File) error {
 			ckey = p.(string)
 			if ckey != "" {
 				popn = true
-				(c.configure).(Default)[ckey] = make(Property)
+				(c.Configure).(Default)[ckey] = make(Property)
 
 			} else {
 				popn = false
@@ -35,7 +35,7 @@ func envDefault(c *Config, f *os.File) error {
 			if popn {
 				prop := (p).(Property)
 				for k, v := range prop {
-					(c.configure).(Default)[ckey][k] = v
+					(c.Configure).(Default)[ckey][k] = v
 				}
 			}
 		} else {
@@ -43,7 +43,7 @@ func envDefault(c *Config, f *os.File) error {
 		}
 
 	}
-	fmt.Println(c.configure)
+	fmt.Println(c.Configure)
 	return nil
 }
 
@@ -103,7 +103,7 @@ func envStringSplit(s string, sep string) (Property, error) {
 }
 
 func envDefaultGet(s string) *Property {
-	if v, ok := (config.configure).(Default)[s]; ok {
+	if v, ok := (config.Configure).(Default)[s]; ok {
 		return &v
 	}
 	return nil

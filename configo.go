@@ -6,8 +6,10 @@ import (
 	"strings"
 )
 
+type CONFIG_TYPE int
+
 const (
-	TYPE_DEFAULT = iota
+	TYPE_DEFAULT CONFIG_TYPE = iota
 )
 
 const (
@@ -23,19 +25,19 @@ type (
 )
 
 type Config struct {
-	configType int
-	configPath string
-	configure  Common
+	Type      CONFIG_TYPE
+	Path      string
+	Configure Common
 }
 
 var config *Config
 
-const CONFIG_FILE = "config.env"
+const DEFAULT_CONFIG_FILE = "config.env"
 
 func init() {
 	config = NewDefaultConfig()
 	if e := config.Load(); e != nil {
-		panic(e)
+		config.Configure = make(Default)
 	}
 }
 
@@ -47,16 +49,27 @@ func GetSystemSeparator() string {
 }
 
 func NewDefaultConfig() *Config {
-	defaultConfig := make(Default)
 	wd, err := os.Getwd()
-	if err != nil {
-		panic(err)
+	fp := ""
+	if err == nil {
+		fp = strings.Join([]string{wd, DEFAULT_CONFIG_FILE}, GetSystemSeparator())
 	}
-	fp := strings.Join([]string{wd, CONFIG_FILE}, GetSystemSeparator())
+
+	return NewConfig(fp)
+}
+
+func NewConfig(path string, args ...CONFIG_TYPE) *Config {
+	defaultConfig := make(Default)
+
+	configType := TYPE_DEFAULT
+	if args != nil {
+		configType = args[0]
+	}
+
 	conf := &Config{
-		configType: TYPE_DEFAULT,
-		configPath: fp,
-		configure:  (Common)(defaultConfig),
+		Type:      configType,
+		Path:      path,
+		Configure: (Common)(defaultConfig),
 	}
 	return conf
 }
@@ -66,7 +79,7 @@ func Load() error {
 }
 
 func (c *Config) Load() error {
-	file, openErr := os.Open(c.configPath)
+	file, openErr := os.Open(c.Path)
 	if openErr != nil {
 		return ERROR_CONFIG_CANNOT_OPEN
 	}
@@ -79,41 +92,39 @@ func (c *Config) Load() error {
 }
 
 func envLoad(c *Config, f *os.File) error {
-	if c.configType == TYPE_DEFAULT {
+	if c.Type == TYPE_DEFAULT {
 		return envDefault(c, f)
 	}
 
 	return nil
 }
 
-func Get(s string) *Property {
+func Get(s string) (*Property, error) {
 	return config.Get(s)
 }
 
-func (c *Config) Get(s string) *Property {
-	if config.configType == TYPE_DEFAULT {
-		return envDefaultGet(s)
+func (c *Config) Get(s string) (*Property, error) {
+	if config.Type == TYPE_DEFAULT {
+		p := envDefaultGet(s)
+		if p != nil {
+			return p, nil
+		}
+		return nil, ERROR_CONFIG_GET_PROPERTY
 	}
-	return nil
+	return nil, ERROR_CONFIG_GET_PROPERTY_TYPE
 }
 
-func (p *Property) Get(s ...string) string {
-	if len(s) > 1 {
-		return p.GetOneD(s[0], s[1])
-	} else {
-		return p.GetOne(s[0])
-	}
-}
+func (p *Property) Get(s string) (string, error) {
 
-func (p *Property) GetOne(s string) string {
 	if v, ok := (*p)[s]; ok {
-		return v
+		return v, nil
 	}
 
-	return ""
+	return "", ERROR_CONFIG_GET_PROPERTY_VALUE
+
 }
 
-func (p *Property) GetOneD(s, d string) string {
+func (p *Property) MustGet(s, d string) string {
 	if v, ok := (*p)[s]; ok {
 		return v
 	}
