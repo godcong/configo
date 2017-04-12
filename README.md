@@ -1,4 +1,4 @@
-# configo
+\# configo
 an go config load project
 
 an env example: <br/>
@@ -11,4 +11,5 @@ num =	666 <br/>
 something  = wrong  #注释1 <br/>
 \#fdfdfd = fdfdfd    注释整行 <br/>
 refer= refer       //注释3 <br/>
+
 
