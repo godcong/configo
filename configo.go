@@ -41,6 +41,7 @@ func init() {
 	}
 }
 
+//GetSystemSeparator System Separator
 func GetSystemSeparator() string {
 	if runtime.GOOS == "windows" {
 		return "\\"
@@ -48,6 +49,7 @@ func GetSystemSeparator() string {
 	return "/"
 }
 
+//NewDefaultConfig default config
 func NewDefaultConfig() *Config {
 	wd, err := os.Getwd()
 	fp := ""
