@@ -60,6 +60,7 @@ func NewDefaultConfig() *Config {
 	return NewConfig(fp)
 }
 
+//NewConfig new config
 func NewConfig(path string, args ...CONFIG_TYPE) *Config {
 	defaultConfig := make(Default)
 
@@ -76,10 +77,12 @@ func NewConfig(path string, args ...CONFIG_TYPE) *Config {
 	return conf
 }
 
+//Load default load
 func Load() error {
 	return config.Load()
 }
 
+//Load load
 func (c *Config) Load() error {
 	file, openErr := os.Open(c.Path)
 	if openErr != nil {
@@ -101,10 +104,12 @@ func envLoad(c *Config, f *os.File) error {
 	return nil
 }
 
+//Get default get
 func Get(s string) (*Property, error) {
 	return config.Get(s)
 }
 
+//Get config get
 func (c *Config) Get(s string) (*Property, error) {
 	if config.Type == TYPE_DEFAULT {
 		p := envDefaultGet(s)
@@ -116,6 +121,7 @@ func (c *Config) Get(s string) (*Property, error) {
 	return nil, ERROR_CONFIG_GET_PROPERTY_TYPE
 }
 
+//Get property get
 func (p *Property) Get(s string) (string, error) {
 
 	if v, ok := (*p)[s]; ok {
@@ -126,6 +132,7 @@ func (p *Property) Get(s string) (string, error) {
 
 }
 
+//MustGet property get with default value
 func (p *Property) MustGet(s, d string) string {
 	if v, ok := (*p)[s]; ok {
 		return v
