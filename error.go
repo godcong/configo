@@ -2,15 +2,15 @@ package configo
 
 import "errors"
 
-//错误编号
+//error
 var (
-	ERROR_CONFIG_UNKNOWN            = errors.New("unknown")
-	ERROR_CONFIG_NOT_FOUND          = errors.New("config not found")
-	ERROR_CONFIG_CANNOT_OPEN        = errors.New("config cannot open")
-	ERROR_CONFIG_GET_PROPERTY       = errors.New("property not found")
-	ERROR_CONFIG_GET_PROPERTY_TYPE  = errors.New("property type not found")
-	ERROR_CONFIG_GET_PROPERTY_VALUE = errors.New("property value not found")
-	ERROR_SPLIT_NO_DATA             = errors.New("split no data")
-	ERROR_GET_NOTHING               = errors.New("get nothing")
-	ERROR_GET_MAP_VALUE_NOT_FOUND   = errors.New("map value not found ")
+	ErrorConfigUnknown          = errors.New("unknown")
+	ErrorConfigNotFound         = errors.New("config not found")
+	ErrorConfigCannotOpen       = errors.New("config cannot open")
+	ErrorConfigGetProperty      = errors.New("property not found")
+	ErrorConfigGetPropertyType  = errors.New("property type not found")
+	ErrorConfigGetPropertyValue = errors.New("property value not found")
+	ErrorSplitNoData            = errors.New("split no data")
+	ErrorGetNothing             = errors.New("get nothing")
+	ErrorGetMapValueNotFound    = errors.New("map value not found ")
 )

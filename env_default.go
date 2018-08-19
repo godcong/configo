@@ -98,7 +98,7 @@ func envStringSplit(s string, sep string) (Property, error) {
 		return Property{key: val}, nil
 	}
 
-	return nil, ERROR_SPLIT_NO_DATA
+	return nil, ErrorSplitNoData
 
 }
 

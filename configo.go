@@ -86,7 +86,7 @@ func Load() error {
 func (c *Config) Load() error {
 	file, openErr := os.Open(c.Path)
 	if openErr != nil {
-		return ERROR_CONFIG_CANNOT_OPEN
+		return ErrorConfigCannotOpen
 	}
 	defer file.Close()
 
@@ -116,9 +116,9 @@ func (c *Config) Get(s string) (*Property, error) {
 		if p != nil {
 			return p, nil
 		}
-		return nil, ERROR_CONFIG_GET_PROPERTY
+		return nil, ErrorConfigGetProperty
 	}
-	return nil, ERROR_CONFIG_GET_PROPERTY_TYPE
+	return nil, ErrorConfigGetPropertyType
 }
 
 //Get property get
@@ -128,7 +128,7 @@ func (p *Property) Get(s string) (string, error) {
 		return v, nil
 	}
 
-	return "", ERROR_CONFIG_GET_PROPERTY_VALUE
+	return "", ErrorConfigGetPropertyValue
 
 }
 
